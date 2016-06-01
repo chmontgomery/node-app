@@ -1,15 +1,13 @@
-var config = require('./services/config');
-var logger = require('./services/logger');
+var config = require('../core/config');
 var env = config.get('NODE_ENV');
-var dust = require('./services/dust');
-var theme = 'mw-styles';
+var logger = require('../core/logger')('lib/routes/error');
 
 // NOTE: need to leave "next" in param list, otherwise this won't get called
-module.exports = function (err, req, res, next) { // err handler MUST have 4 args
+module.exports = (err, req, res, next) => { // err handler MUST have 4 args
+
   logger.error(err);
 
   var model = {
-    theme: theme,
     status: err.status || 500,
     message: err.message || 'Internal Server Error'
   };
@@ -26,9 +24,5 @@ module.exports = function (err, req, res, next) { // err handler MUST have 4 arg
   }
 
   res.status(model.status);
-  dust.render('error', model, function(err, out) {
-    if (err) logger.error(err);
-    console.log(out)
-    res.send(out);
-  });
+  res.render('error', model);
 };

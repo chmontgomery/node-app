@@ -1,10 +1,11 @@
-var logger = require('./src/lib/services/logger');
-var app = require('./src/app')();
-var config = require('./src/lib/services/config');
+var config = require('./src/lib/core/config');
+var logger = require('./src/lib/core/logger')('server');
 var port = config.get('PORT');
+
+let app = require('./src/app')();
 
 app.set('port', port);
 
-app.listen(port, function () {
+app.listen(port, () => {
   logger.info('Server listening on port %s', port);
 });
